@@ -4,7 +4,7 @@
 	let mounted = $state(false);
 	let copiedIndex = $state(-1);
 
-	const steps = [
+	const ollamaSteps = [
 		{
 			title: 'Install Ollama',
 			description: 'Ollama allows you to run large language models locally on your machine.',
@@ -13,29 +13,56 @@
 			commands: null
 		},
 		{
-			title: 'Verify Installation',
-			description: 'Open your terminal and verify that Ollama is installed correctly.',
-			commands: ['ollama --version']
-		},
-		{
 			title: 'Pull a Model',
 			description:
 				'Download a language model. I recommend starting with Gemma 3 for a good balance of speed and capability.',
 			commands: ['ollama pull gemma3:1b']
 		},
 		{
-			title: 'Start the Ollama Server',
+			title: 'Start Server',
 			description:
-				'Run the Ollama server in the background. This needs to be running for Local Launchpad to work.',
+				'Run the Ollama server in the background. It must be running for the app to connect.',
 			commands: ['ollama serve']
-		},
-		{
-			title: 'Test the Connection',
-			description:
-				'In a new terminal window, verify the server is running by listing available models.',
-			commands: ['ollama list']
 		}
 	];
+
+    const appSteps = [
+        {
+            title: 'Clone Repository',
+            description: 'Download the source code to your machine.',
+            commands: ['git clone https://github.com/Alex-Bonev/sandHacks.git', 'cd local-launchpad']
+        },
+        {
+            title: 'Install Dependencies',
+            description: 'Install the required node packages.',
+            commands: ['npm install']
+        },
+        {
+            title: 'Run Locally',
+            description: 'Start the development server. This is the best way to use the app.',
+            commands: ['npm run dev']
+        }
+    ];
+
+    const tunnelSteps = [
+        {
+            title: 'Install Ngrok',
+            description: 'If you want to use the Vercel deployment, you must tunnel your local Ollama port to the internet.',
+            link: 'https://ngrok.com/download',
+            linkText: 'Download Ngrok',
+            commands: null
+        },
+        {
+            title: 'Expose Port 11434',
+            description: 'Create a secure tunnel to your local Ollama instance.',
+            commands: ['ngrok http 11434']
+        },
+        {
+            title: 'Configure App',
+            description: 'Copy the "Forwarding" URL from Ngrok (e.g., https://xyz.ngrok-free.app) and paste it into the "Settings" menu of Local Launchpad.',
+            commands: null
+        }
+    ];
 
 	onMount(() => {
 		mounted = true;
@@ -78,95 +105,38 @@
 	<main class="main-content" class:animate={mounted}>
 		<div class="title-section">
 			<h1 class="title">Setup Guide</h1>
-			<p class="subtitle">Get Local Launchpad running in just a few minutes</p>
+			<p class="subtitle">Complete configuration guide for Local Launchpad</p>
 		</div>
 
+        <!-- Section 1: Ollama -->
+        <div class="section-header">
+            <div class="section-badge">1</div>
+            <h2>Setup Ollama (Required)</h2>
+        </div>
 		<div class="steps-container">
-			{#each steps as step, i}
+			{#each ollamaSteps as step, i}
 				<div class="step-card" style="animation-delay: {0.1 + i * 0.1}s">
 					<div class="step-number">{i + 1}</div>
 					<div class="step-content">
 						<h2 class="step-title">{step.title}</h2>
 						<p class="step-description">{step.description}</p>
-
 						{#if step.link}
 							<a href={step.link} target="_blank" rel="noopener noreferrer" class="download-link">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="18"
-									height="18"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-									<polyline points="7 10 12 15 17 10" />
-									<line x1="12" x2="12" y1="15" y2="3" />
-								</svg>
-								{step.linkText}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="14"
-									height="14"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-									<polyline points="15 3 21 3 21 9" />
-									<line x1="10" x2="21" y1="14" y2="3" />
-								</svg>
+								{step.linkText} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" x2="21" y1="14" y2="3" /></svg>
 							</a>
 						{/if}
-
 						{#if step.commands}
 							<div class="commands-container">
 								{#each step.commands as command, j}
-									{@const commandIndex = i * 10 + j}
 									<div class="command-block">
 										<code class="command-text">{command}</code>
-										<button
-											class="copy-button"
-											onclick={() => copyToClipboard(command, commandIndex)}
-											aria-label="Copy command"
-										>
-											{#if copiedIndex === commandIndex}
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													width="16"
-													height="16"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-												>
-													<polyline points="20 6 9 17 4 12" />
-												</svg>
-											{:else}
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													width="16"
-													height="16"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-												>
-													<rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-													<path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-												</svg>
-											{/if}
-										</button>
+										<button class="copy-button" onclick={() => copyToClipboard(command, `ollama-${i}-${j}`)}>
+                                            {#if copiedIndex === `ollama-${i}-${j}`}
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12" /></svg>
+                                            {:else}
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+                                            {/if}
+                                        </button>
 									</div>
 								{/each}
 							</div>
@@ -176,127 +146,213 @@
 			{/each}
 		</div>
 
+        <!-- Section 2: Method Selection -->
+        <div class="method-split">
+            <div class="section-header">
+                <div class="section-badge">2</div>
+                <h2>Choose How to Run</h2>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab-card recommended">
+                    <div class="tab-header">
+                        <h3>Option A: Run Locally</h3>
+                        <span class="badge">Recommended</span>
+                    </div>
+                    <p>Run the web app on your own machine. Best performance and privacy.</p>
+                    <div class="mini-steps">
+                        {#each appSteps as step, i}
+                            <div class="mini-step">
+                                <div class="step-dot"></div>
+                                <div class="mini-content">
+                                    <strong>{step.title}</strong>
+                                    {#if step.commands}
+                                        <code class="mini-code">{step.commands[0]}</code>
+                                    {/if}
+                                </div>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+
+                <div class="tab-card advanced">
+                    <div class="tab-header">
+                        <h3>Option B: Use Vercel</h3>
+                        <span class="badge orange">Advanced</span>
+                    </div>
+                    <p>Use the hosted website but connect to your local Ollama via a Tunnel.</p>
+                    <div class="mini-steps">
+                        {#each tunnelSteps as step, i}
+                            <div class="mini-step">
+                                <div class="step-dot orange"></div>
+                                <div class="mini-content">
+                                    <strong>{step.title}</strong>
+									{#if step.description}
+										<div class="text-xs text-stone-600">{step.description}</div>
+									{/if}
+                                    {#if step.commands}
+                                        <code class="mini-code">{step.commands[0]}</code>
+                                    {/if}
+                                </div>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+            </div>
+        </div>
+
 		<div class="success-section">
 			<div class="success-icon">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="32"
-					height="32"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-					<polyline points="22 4 12 14.01 9 11.01" />
-				</svg>
+				<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
 			</div>
-			<h2 class="success-title">You're All Set!</h2>
+			<h2 class="success-title">Ready to Launch?</h2>
 			<p class="success-description">
-				Once you see your models listed, you're ready to use Local Launchpad.
+				Once your environment is set up, verify your settings in the app.
 			</p>
-			<a href="/tools" class="cta-button">
-				Start Using Tools
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="20"
-					height="20"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<path d="M5 12h14" />
-					<path d="m12 5 7 7-7 7" />
-				</svg>
+			<a href="/" class="cta-button">
+				Go to Dashboard
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
 			</a>
-		</div>
-
-		<div class="help-section">
-			<h3 class="help-title">Need Help?</h3>
-			<div class="help-cards">
-				<a
-					href="https://github.com/ollama/ollama"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="help-card"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<path
-							d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-						/>
-						<path d="M9 18c-4.51 2-5-2-7-2" />
-					</svg>
-					<span>Ollama GitHub</span>
-				</a>
-				<a
-					href="https://ollama.com/library"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="help-card"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<path d="m16 6 4 14" />
-						<path d="M12 6v14" />
-						<path d="M8 8v12" />
-						<path d="M4 4v16" />
-					</svg>
-					<span>Model Library</span>
-				</a>
-				<a
-					href="https://discord.gg/ollama"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="help-card"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<circle cx="12" cy="12" r="10" />
-						<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-						<path d="M12 17h.01" />
-					</svg>
-					<span>Community Help</span>
-				</a>
-			</div>
 		</div>
 	</main>
 </div>
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
+	/* ... (Keep existing styles) ... */
+    /* Additions below */
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-badge {
+        width: 32px;
+        height: 32px;
+        background: #1e293b;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-family: sans-serif;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+        color: #1e3a5f;
+        margin: 0;
+        font-family: 'Source Serif 4', serif;
+    }
+
+    .method-split {
+        margin-bottom: 3rem;
+    }
+
+    .tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .tab-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: all 0.2s;
+    }
+
+    .tab-card.recommended {
+        border-color: #bfdbfe;
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
+    }
+
+    .tab-card.advanced {
+        border-color: #fdba74;
+    }
+
+    .tab-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .tab-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #0f172a;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        background: #dbeafe;
+        color: #1e40af;
+        border-radius: 999px;
+        font-weight: 600;
+        font-family: sans-serif;
+    }
+
+    .badge.orange {
+        background: #ffedd5;
+        color: #9a3412;
+    }
+
+    .mini-steps {
+        margin-top: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .mini-step {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .step-dot {
+        width: 8px;
+        height: 8px;
+        background: #3b82f6;
+        border-radius: 50%;
+        margin-top: 6px;
+    }
+
+    .step-dot.orange {
+        background: #f97316;
+    }
+
+    .mini-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .mini-code {
+        background: #f1f5f9;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: #475569;
+        width: fit-content;
+    }
+
+    @media (max-width: 768px) {
+        .tabs {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Re-include previous styles for .config-container, .header, .title, .subtitle, .step-card etc. here */
+    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
 
 	:global(body) {
 		margin: 0;
