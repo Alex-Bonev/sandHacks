@@ -354,7 +354,7 @@
 								</span>
 								<input
 									type="file"
-									webkitdirectory={''}
+									webkitdirectory
 									directory={''}
 									multiple
 									class="absolute inset-0 cursor-pointer opacity-0"
