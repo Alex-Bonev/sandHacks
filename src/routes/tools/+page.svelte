@@ -1,11 +1,11 @@
 <script lang="ts">
-	import RepoExplorer from '../../components/RepoExplorer.svelte';
-	import Settings from '../../components/Settings.svelte';
-	import Chat from '../../components/Chat.svelte';
-	import BatchRefactor from '../../components/BatchRefactor.svelte';
-	import SecurityScan from '../../components/SecurityScan.svelte';
+	import RepoExplorer from '../../Components/RepoExplorer.svelte';
+	import Settings from '../../Components/Settings.svelte';
+	import Chat from '../../Components/Chat.svelte';
+	import BatchRefactor from '../../Components/BatchRefactor.svelte';
+	import SecurityScan from '../../Components/SecurityScan.svelte';
 	import LogDetective from '../../Components/LogDetective.svelte';
-	import LocalLogger from '../../components/LocalLogger.svelte';
+	import LocalLogger from '../../Components/LocalLogger.svelte';
 
 	import { getModels, type OllamaModel } from '../../lib/ollama';
 	import { getSetting, saveSetting } from '../../lib/storage';
