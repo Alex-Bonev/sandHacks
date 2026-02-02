@@ -677,8 +677,6 @@
 </div>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
-    
     :global(.font-serif) {
         font-family: 'Source Serif 4', Georgia, serif;
     }

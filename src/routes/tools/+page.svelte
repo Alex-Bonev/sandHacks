@@ -134,7 +134,7 @@
 <div class="flex h-screen w-screen flex-col overflow-hidden bg-white font-sans text-slate-900">
 	<!-- Header with Dropdown -->
 	<div
-		class="z-50 flex h-14 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4"
+		class="z-50 flex h-18 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4 pt-4"
 	>
 		<!-- Dropdown Menu Container -->
 		<div class="relative" id="tool-dropdown">

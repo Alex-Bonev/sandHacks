@@ -31,6 +31,7 @@
 	"dependencies": {
 		"@types/diff": "^8.0.0",
 		"@types/jszip": "^3.4.1",
+		"@zerodevx/svelte-toast": "^0.9.6",
 		"animejs": "^4.3.5",
 		"clsx": "^2.1.1",
 		"diff": "^8.0.3",

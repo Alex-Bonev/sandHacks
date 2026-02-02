@@ -209,7 +209,7 @@
 			<p class="success-description">
 				Once your environment is set up, verify your settings in the app.
 			</p>
-			<a href="/" class="cta-button">
+			<a href="/tools" class="cta-button">
 				Go to Dashboard
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
 			</a>
@@ -351,9 +351,6 @@
         }
     }
     
-    /* Re-include previous styles for .config-container, .header, .title, .subtitle, .step-card etc. here */
-    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
-
 	:global(body) {
 		margin: 0;
 		padding: 0;
